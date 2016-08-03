@@ -1,13 +1,11 @@
 module.exports.MIGRATION = "module.exports = {\n\
     up (Knex, Promise) {\n\
-        // TODO: use Knex.schema\n\
-        return new Promise((resolve, reject) => resolve());\n\
+        // TODO: return a Promise, eg. Knex.schema.table\n\
     },\n\
     \n\
     \n\
     down (Knex, Promise) {\n\
-        // TODO: use Knex.schema\n\
-        return new Promise((resolve, reject) => resolve());\n\
+        // TODO: return a Promise, eg. Knex.schema.table\n\
     }\n\
 };";
 

@@ -10,16 +10,16 @@ const Templates = require('./templates');
 
 
 var options = {
-    migrationsPath: Path.resolve(`${APP_ROOT}/migrations`),
-    modelsPath: Path.resolve(`${APP_ROOT}/app/server/models`),
+    migrations: Path.resolve(`${APP_ROOT}/migrations`),
+    models: Path.resolve(`${APP_ROOT}/app/server/models`),
     tableName: 'schema_migrations'
 }
 
 
 module.exports = (Gulp, Knex, new_options) => {
     options = {
-        directory: new_options.migrationsPath || options.migrationsPath,
-        modelsDirectory: new_options.modelsPath || options.modelsPath,
+        directory: new_options.migrations || options.migrations,
+        models: new_options.models || options.models,
         tableName: new_options.schemaTable || options.tableName
     };
 
@@ -47,14 +47,16 @@ module.exports = (Gulp, Knex, new_options) => {
                 
                 Util.log('Created new migration', Util.colors.green(migration_path.replace(options.directory, '')));
                 
-                var model_path = `${options.modelsDirectory}/${Inflect.dasherize(Inflect.singularize(table_name))}.js`;
-                template = Templates.MODEL;
-                
-                template = template.replace(/{{TABLE}}/g, table_name);
-                template = template.replace(/{{MODEL}}/g, Inflect.classify(Args.model));
-                
-                FS.writeFileSync(model_path, template);
-                Util.log("Created new model", Util.colors.green(model_path.replace(options.modelsDirectory, '')));
+                if (options.models !== false) {
+                    var model_path = `${options.models}/${Inflect.dasherize(Inflect.singularize(table_name))}.js`;
+                    template = Templates.MODEL;
+                    
+                    template = template.replace(/{{TABLE}}/g, table_name);
+                    template = template.replace(/{{MODEL}}/g, Inflect.classify(Args.model));
+                    
+                    FS.writeFileSync(model_path, template);
+                    Util.log("Created new model", Util.colors.green(model_path.replace(options.models, '')));
+                }
                 
                 process.exit();
             }).catch(err => {

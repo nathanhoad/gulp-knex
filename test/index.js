@@ -92,14 +92,14 @@ describe('Migrations:', function () {
             Should(output).containEql('Created new migration');
             Should(output).containEql('_do-the-thing.js');
             
-            var migration_file_name = output.match(/(\d+\_do-the-thing\.js)/gm)[0];
-            FS.access(`${__dirname}/migrations/${migration_file_name}`, FS.F_OK, (err) => {
+            var migration_file_name = `${__dirname}/migrations/${output.match(/(\d+\_do-the-thing\.js)/gm)[0]}`;
+            FS.access(migration_file_name, FS.F_OK, (err) => {
                 Should(err).be.null();
                 
-                output = exec('gulp migrate:latest').toString();
+                var contents = FS.readFileSync(migration_file_name, 'utf8');
                 
-                Should(output).containEql('Migrating group');
-                Should(output).containEql('_do-the-thing.js');
+                Should(contents).containEql('up (');
+                Should(contents).containEql('down (');
                 
                 done();
             });
@@ -118,17 +118,23 @@ describe('Migrations:', function () {
                 Should(output).containEql('Created new model');
                 Should(output).containEql('thing.js');
                 
-                var migration_file_name = output.match(/(\d+\_create-things\.js)/gm)[0];
-                FS.access(`${__dirname}/migrations/${migration_file_name}`, FS.F_OK, (err) => {
+                var migration_file_name = `${__dirname}/migrations/${output.match(/(\d+\_create-things\.js)/gm)[0]}`;
+                FS.access(migration_file_name, FS.F_OK, (err) => {
                     Should(err).be.null();
                     
-                    FS.access(`${__dirname}/models/thing.js`, FS.FS_OK, (err) => {
+                    var contents = FS.readFileSync(migration_file_name, 'utf8');
+                    
+                    Should(contents).containEql('up (');
+                    Should(contents).containEql('down (');
+                    Should(contents).containEql("createTable('things'");
+                    
+                    var model_file_name = `${__dirname}/models/thing.js`;
+                    FS.access(model_file_name, FS.FS_OK, (err) => {
                         Should(err).be.null();
                         
-                        output = exec('gulp migrate:latest').toString();
+                        var contents = FS.readFileSync(model_file_name, 'utf8');
                         
-                        Should(output).containEql('Migrating group');
-                        Should(output).containEql('_create-things.js');
+                        Should(contents).containEql('var Thing = Model.extend({');
                         
                         done();
                     });
