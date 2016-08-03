@@ -1,0 +1,14 @@
+# OS Junk
+.DS_Store
+
+# App Junk
+node_modules
+npm-debug.log
+lib
+
+# Test junk
+test/migrations/*
+!test/migrations/20160802224158_print-a-log.js
+!test/migrations/20160802224159_do-nothing.js
+test/models/*
+!test/models/.gitkeep
