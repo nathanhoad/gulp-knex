@@ -2,7 +2,7 @@
 
 Sets up some basic Gulp tasks for Knex migrations.
 
-**NOTE:** Generated Models use [http://npmjs.com/package/gimmea](Gimmea) to 
+**NOTE:** Generated Models use [Gimmea](http://npmjs.com/package/gimmea) to 
 generate their UUID keys.
 
 
